@@ -16,7 +16,13 @@ public class ProblemController {
     private ProblemService problemService;
 
     @GetMapping("/problem-status")
-    public List<UserProblemStatus> getProblemStatus(@RequestParam int problemId) {
-        return problemService.getUserProblemStatuses(problemId);
+    public Object getProblemStatus(@RequestParam int problemId) {
+        List<String> solvedUsers = problemService.getSolvedUsers(problemId);
+
+        if (solvedUsers.isEmpty()) {
+            return "아무도 풀지 않았습니다.";
+        } else {
+            return "문제 푼 사람: " + String.join(", ", solvedUsers);
+        }
     }
 }

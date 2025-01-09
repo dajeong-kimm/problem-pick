@@ -3,6 +3,7 @@ package com.pick.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,18 @@ public class ProblemServiceImpl implements ProblemService {
         }
 
         return statuses;
+    }
+
+    @Override
+    public List<String> getSolvedUsers(int problemId) {
+        List<String> allUsers = userRepository.getAllUsers();
+
+        return allUsers.stream()
+                .filter(username -> {
+                    Set<Integer> solvedProblems = handleFetcher.fetchSolvedProblems(username);
+                    return solvedProblems.contains(problemId);
+                })
+                .collect(Collectors.toList());
     }
 
 }
